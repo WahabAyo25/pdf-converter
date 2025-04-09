@@ -1,0 +1,39 @@
+headers = []
+redirects = []
+
+[functions]
+
+[functions."*"]
+
+[[plugins]]
+origin = "default"
+package = "@netlify/plugin-nextjs"
+
+[plugins.inputs]
+
+[build]
+publish = "/Users/abubakarabdulwahab/Documents/pdf-to-word-converter/.next"
+publishOrigin = "ui"
+commandOrigin = "ui"
+base = "/Users/abubakarabdulwahab/Documents/pdf-to-word-converter"
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
