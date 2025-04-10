@@ -1,10 +1,8 @@
-import { exec } from 'child_process';
+// pages/api/convert.js
 import formidable from 'formidable';
 import fs from 'fs/promises';
 import path from 'path';
-import util from 'util';
-
-const execPromise = util.promisify(exec);
+import fetch from 'node-fetch';
 
 export const config = {
   api: {
@@ -18,12 +16,12 @@ export default async function handler(req, res) {
   }
 
   const uploadDir = path.join(process.cwd(), 'tmp');
-  await fs.mkdir(uploadDir, { recursive: true });
+  await fs.mkdir(uploadDir, { recursive: true }).catch(() => {});
 
   const form = formidable({
     uploadDir,
-    filename: (name, ext) => `upload-${Date.now()}${ext}`,
-    maxFileSize: 10 * 1024 * 1024,
+    keepExtensions: true,
+    maxFileSize: 10 * 1024 * 1024, // 10MB
   });
 
   try {
@@ -35,46 +33,36 @@ export default async function handler(req, res) {
     });
 
     const file = files.file[0];
-    const originalName = path.parse(file.originalFilename).name;
-    const sanitizedName = originalName.replace(/[^a-zA-Z0-9]/g, '_'); // Sanitize filename
     const inputPath = file.filepath;
-    const outputFilename = `${sanitizedName}.docx`;
-    const outputPath = path.join(uploadDir, outputFilename);
-
-    // Make sure output directory exists
-    const outputDir = path.dirname(outputPath);
-    await fs.mkdir(outputDir, { recursive: true });
-
-    // Convert using Python script
-    const pythonCommand = `/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 "${path.join(process.cwd(), 'pdf_converter.py')}" "${inputPath}" "${outputPath}"`;
     
-    // Execute the Python command - This line was missing!
-    const { stdout, stderr } = await execPromise(pythonCommand);
+    // Create form data to send to our Python API
+    const formData = new FormData();
+    const fileBuffer = await fs.readFile(inputPath);
+    const blob = new Blob([fileBuffer], { type: 'application/pdf' });
+    formData.append('file', blob, file.originalFilename);
     
-    if (stderr) {
-      console.log('Python script output:', stderr);
+    // Send to our Python API
+    const response = await fetch('https://pdf-converter-guxo.onrender.com', {
+      method: 'POST',
+      body: formData,
+    });
+    
+    if (!response.ok) {
+      throw new Error(`API returned ${response.status}: ${await response.text()}`);
     }
     
-    // Check if the file exists before attempting to read it
-    const fileExists = await fs.access(outputPath).then(() => true).catch(() => false);
-    if (!fileExists) {
-      throw new Error(`Output file was not created at ${outputPath}`);
-    }
-
-    // Read converted file
-    const docxBuf = await fs.readFile(outputPath);
-
+    // Forward the response from our Python API
+    const docxBuffer = await response.arrayBuffer();
+    
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-    res.setHeader('Content-Disposition', `attachment; filename="${outputFilename}"`);
-    res.send(docxBuf);
-
+    res.setHeader('Content-Disposition', `attachment; filename="${path.parse(file.originalFilename).name}.docx"`);
+    res.send(Buffer.from(docxBuffer));
+    
   } catch (error) {
     console.error('Conversion error:', error);
     res.status(500).json({ error: error.message || 'Conversion failed' });
   } finally {
-    // Only attempt to clean up if the directory exists
     try {
-      await fs.access(uploadDir);
       await fs.rm(uploadDir, { recursive: true, force: true });
     } catch (error) {
       console.log('Cleanup error (non-critical):', error.message);

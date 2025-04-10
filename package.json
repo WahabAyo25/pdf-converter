@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-     "export": "next export"
+    "export": "next export"
   },
   "dependencies": {
     "@types/formidable": "^3.4.5",
@@ -23,6 +23,7 @@
     "libreoffice-convert": "^1.6.1",
     "mammoth": "^1.9.0",
     "next": "15.2.4",
+    "node-fetch": "^3.3.2",
     "pdf-lib": "^1.17.1",
     "pdf-parse": "^1.1.1",
     "pdf.js-extract": "^0.2.1",
