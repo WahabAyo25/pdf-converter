@@ -27,11 +27,11 @@ body {
 
 /* PdfConverter.css */
 .pdf-converter-container {
-  background-image: url('https://www.channelstv.com/wp-content/uploads/2023/05/EFCC-head-office-Abuja.png');
+  background-image: url('https://www.sodapdf.com/super-service-pages-optimize-static/dist/images/articles/pdf-to-word-two.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: #e53e3e; /* Fallback color */
+  background-color: #3e6de5; /* Fallback color */
   position: relative;
   min-height: 100vh;
   display: flex;
@@ -46,6 +46,6 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(153, 27, 27, 0.3); /* Adjusted red overlay */
+  background: rgba(27, 107, 153, 0.3); /* Adjusted red overlay */
   z-index: 0;
 }

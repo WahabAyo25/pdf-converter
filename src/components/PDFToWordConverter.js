@@ -1,4 +1,3 @@
-// components/PdfConverter.jsx
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -11,7 +10,6 @@ export default function PdfConverter() {
   const [error, setError] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const [conversionProgress, setConversionProgress] = useState(0);
-  const [logoError, setLogoError] = useState(false);
   const fileInputRef = useRef(null);
   
   // Simulate progress during conversion
@@ -115,50 +113,26 @@ export default function PdfConverter() {
     setConversionProgress(0);
   };
 
-  const handleImageError = () => {
-    setLogoError(true);
-  };
-
-  // Determine which logo to use
-  const logoSrc = logoError 
-    ? "https://cdn.punchng.com/wp-content/uploads/2023/05/04121722/efcc.jpg" 
-    : "/efcc-logo.png";
-
   return (
     <div className="pdf-converter-container">
       <div className="pdf-converter-overlay"></div>
   
-
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="max-w-4xl w-full mx-auto p-6 bg-white rounded-xl shadow-xl z-10"
       >
-        {/* Header with EFCC Logo and title */}
+        {/* Header with title */}
         <div className="flex items-center justify-center mb-8">
-          <motion.div 
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            className="mr-4"
-          >
-            <div className="rounded-full overflow-hidden w-20 h-20 border-2 border-gray-200 shadow-md flex items-center justify-center bg-white">
-              <img 
-                src={logoSrc}
-                alt="EFCC Logo" 
-                className="h-full w-full object-contain"
-                onError={handleImageError}
-              />
-            </div>
-          </motion.div>
           <div className="text-center">
             <motion.h1 
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="text-3xl font-bold text-red-600"
+              className="text-3xl font-bold text-blue-600"
             >
-              EFCC Nigeria
+              PDF to DOCX Converter
             </motion.h1>
             <motion.h2 
               initial={{ x: -20, opacity: 0 }}
@@ -166,7 +140,7 @@ export default function PdfConverter() {
               transition={{ delay: 0.3 }}
               className="text-xl font-semibold text-gray-700"
             >
-              PDF to DOCX Converter
+              Convert your documents easily
             </motion.h2>
           </div>
         </div>
@@ -174,7 +148,7 @@ export default function PdfConverter() {
         {/* Main Content */}
         <motion.div 
           layout
-          className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-lg border border-red-200 shadow-sm"
+          className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-lg border border-blue-200 shadow-sm"
         >
           <AnimatePresence mode="wait">
             {!convertedFileUrl ? (
@@ -191,10 +165,10 @@ export default function PdfConverter() {
                   whileTap={{ scale: 0.99 }}
                   className={`mb-6 p-8 border-2 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${
                     isDragging 
-                      ? 'border-red-500 bg-red-50 shadow-inner' 
+                      ? 'border-blue-500 bg-blue-50 shadow-inner' 
                       : file 
                         ? 'border-green-400 bg-green-50' 
-                        : 'border-red-300 hover:border-red-400 hover:bg-red-50'
+                        : 'border-blue-300 hover:border-blue-400 hover:bg-blue-50'
                   }`}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
@@ -215,7 +189,7 @@ export default function PdfConverter() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                       </svg>
                     ) : (
-                      <svg className="w-12 h-12 text-red-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <svg className="w-12 h-12 text-blue-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                       </svg>
                     )}
@@ -246,8 +220,8 @@ export default function PdfConverter() {
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
-                          <div className="mr-3 bg-red-100 p-2 rounded-lg">
-                            <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <div className="mr-3 bg-blue-100 p-2 rounded-lg">
+                            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
                           </div>
@@ -263,7 +237,7 @@ export default function PdfConverter() {
                             e.stopPropagation();
                             resetConverter();
                           }}
-                          className="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors"
+                          className="text-blue-500 hover:text-blue-700 p-2 rounded-full hover:bg-blue-50 transition-colors"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -311,7 +285,7 @@ export default function PdfConverter() {
                   className={`w-full py-3 px-4 rounded-lg font-medium flex items-center justify-center transition-all duration-300 ${
                     !file || isConverting
                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-red-600 to-red-500 text-white hover:shadow-lg hover:from-red-700 hover:to-red-600'
+                    : 'bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:shadow-lg hover:from-blue-700 hover:to-blue-600'
                   }`}
                 >
                   {isConverting ? (
@@ -343,7 +317,7 @@ export default function PdfConverter() {
                     >
                       <div className="w-full bg-gray-200 rounded-full h-2.5">
                         <motion.div 
-                          className="bg-red-600 h-2.5 rounded-full" 
+                          className="bg-blue-600 h-2.5 rounded-full" 
                           initial={{ width: '0%' }}
                           animate={{ width: `${conversionProgress}%` }}
                           transition={{ type: "tween" }}
@@ -417,8 +391,8 @@ export default function PdfConverter() {
 
         {/* Footer */}
         <div className="mt-8 text-center text-sm text-gray-600">
-          <p>© {new Date().getFullYear()} Economic and Financial Crimes Commission, Nigeria</p>
-          <p className="mt-1">This tool is for official document processing only</p>
+          <p>© {new Date().getFullYear()} PDF Converter Tool</p>
+          <p className="mt-1">Convert your PDF documents to DOCX format</p>
         </div>
       </motion.div>
     </div>

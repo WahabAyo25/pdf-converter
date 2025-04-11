@@ -12,9 +12,9 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>EFCC PDF to Word Converter</title>
-        <meta name="description" content="Convert PDF files to Word documents for EFCC" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>PDF to Word Converter</title>
+        <meta name="description" content="Convert PDF files to Word documents easily" />
+        <link rel="icon" href="/favicon.svg" />
       </Head>
 
       <main>
